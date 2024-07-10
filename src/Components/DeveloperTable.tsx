@@ -32,7 +32,7 @@ const DeveloperTable: React.FC<DeveloperTableProps> = ({ data }) => {
       title: "Score",
       dataIndex: "score",
       key: "score",
-      render: (score: number) => <span>{score.toFixed(2)}</span>,
+      render: (score: number) => <span>{score.toFixed(2)}</span>, // Render score with 2 decimal places
     },
     {
       title: "PR Open",
@@ -76,21 +76,19 @@ const DeveloperTable: React.FC<DeveloperTableProps> = ({ data }) => {
     },
   ]
 
-  // Function to get color from ActivityMeta based on activity name
   const getActivityColor = (activityName: string) => {
     const activity =
       activityMeta && activityMeta.find((meta) => meta.label === activityName)
-    return activity ? activity.fillColor : "#CCCCCC" // Default color if not found
+    return activity ? activity.fillColor : "#CCCCCC"
   }
 
-  // Transforming data to match column keys and applying color codes
   const dataSource = data.map((developer, index) => ({
     key: index,
     avatar: (
       <Avatar style={{ backgroundColor: "#87d068" }} icon={<UserOutlined />} />
     ),
     name: developer.name,
-    score: parseFloat(developer.score.toFixed(2)), // Show score up to starting 2 digits
+    score: Math.floor(developer.score / 100),
     PR_Open: parseInt(
       developer.totalActivity.find((item) => item.name === "PR Open")?.value ||
         "0",
