@@ -1,7 +1,7 @@
 import data from "../data"
-import ActivityMeta from "../Types/ActivityMeta"
-import ContributionInfo from "../Types/ContributionInfo"
-import DayWiseActivity from "../Types/DayWiseActivity"
+import ActivityMeta from "../Types/ActivityMetaType"
+import ContributionInfo from "../Types/ContributionInfoType"
+import DayWiseActivity from "../Types/DayWiseActivityType"
 function getActivityMetaFromContributionInfo(
   data: ContributionInfo[]
 ): ActivityMeta[] {

@@ -1,4 +1,4 @@
-import DeveloperWorklogRow from "../Types/DeveloperWorklogRow"
+import DeveloperWorklogRow from "../Types/DeveloperWorklogRowType"
 
 function findActivityCount(
   developer: DeveloperWorklogRow,

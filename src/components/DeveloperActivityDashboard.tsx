@@ -11,14 +11,19 @@ import { Box } from "@mui/material"
 import RankingChart from "./RankingChart"
 import DoughnutChart from "./DoughnutChart"
 import ChartComponent from "./ChartComponent"
-
-import getFormattedDeveloperNames from "../utils/getFormattedDeveloperNames"
-import { useActivityMeta } from "../Context/ActivityMetaContext"
 import DeveloperTable from "./DeveloperTable"
-import CombinedActivities from "../Types/CombinedActivities"
-import DeveloperWorklogRow from "../Types/DeveloperWorklogRow"
-import ContributionInfo from "../Types/ContributionInfo"
-import MaxValues from "../Types/MaxValues"
+
+import { useActivityMeta } from "../Context/ActivityMetaContext"
+
+import CombinedActivities from "../Types/CombinedActivitiesType"
+import DeveloperWorklogRow from "../Types/DeveloperWorklogRowType"
+import ContributionInfo from "../Types/ContributionInfoType"
+import MaxValues from "../Types/MaxValuesType"
+
+import {
+  getFormattedDeveloperNames,
+  getFormattedDeveloperName,
+} from "../utils/getFormattedDeveloperNames"
 import combineDayWiseActivities from "../utils/combineDayWiseActivities"
 import combineDayWiseActivitiesForDeveloper from "../utils/combineDayWiseActivitiesForDeveloper"
 import calculateScore from "../utils/calculateScore"
@@ -104,12 +109,13 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
 
   const filteredDeveloperData: CombinedActivities[] = developerFilter
     ? combineDayWiseActivitiesForDeveloper(
-        filteredDevelopers.find(
-          (developer) => developer.name === developerFilter
-        ) as DeveloperWorklogRow
+        filteredDevelopers.find((developer) => {
+          return getFormattedDeveloperName(developer.name) === developerFilter
+        }) as DeveloperWorklogRow
       )
     : combinedActivities
 
+  console.log(developerFilter, "filteredDeveloperData")
   const activityColors: any = {}
   activityMetaaa?.forEach((meta) => {
     activityColors[meta.label.replace(" ", "_")] = meta.fillColor
@@ -231,6 +237,8 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
           style={{
             width: "60%",
             textAlign: "center",
+            borderBottom: "1px solid #f1f1f1",
+            borderRight: "1px solid #f1f1f1",
           }}
         >
           <Box>
@@ -242,6 +250,8 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
                 padding: "12px",
                 paddingLeft: "40px",
                 paddingRight: "40px",
+                borderBottom: "1px solid #f1f1f1",
+                borderTop: "1px solid #f1f1f1",
               }}
             >
               <Space wrap>

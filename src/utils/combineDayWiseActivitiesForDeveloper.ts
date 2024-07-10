@@ -1,5 +1,5 @@
-import CombinedActivities from "../Types/CombinedActivities"
-import DeveloperWorklogRow from "../Types/DeveloperWorklogRow"
+import CombinedActivities from "../Types/CombinedActivitiesType"
+import DeveloperWorklogRow from "../Types/DeveloperWorklogRowType"
 
 const combineDayWiseActivitiesForDeveloper = (
   developer: DeveloperWorklogRow

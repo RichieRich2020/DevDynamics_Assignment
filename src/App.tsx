@@ -1,4 +1,4 @@
-import DeveloperActivityDashboard from "./components/DeveloperActivityDashboard"
+import DeveloperActivityDashboard from "./Components/DeveloperActivityDashboard"
 import data from "./data"
 import getActivityMetaFromContributionInfo from "./utils/getActivityMetaFromContributionInfo"
 
@@ -14,7 +14,7 @@ import {
 } from "@ant-design/icons"
 import { Button, Layout, Menu, theme, Typography } from "antd"
 import { ActivityMetaProvider } from "./Context/ActivityMetaContext"
-import ActivityMeta from "./Types/ActivityMeta"
+import ActivityMeta from "./Types/ActivityMetaType"
 
 const { Header, Sider, Content } = Layout
 const { Text } = Typography

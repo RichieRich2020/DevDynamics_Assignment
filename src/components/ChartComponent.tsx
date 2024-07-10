@@ -8,7 +8,7 @@ import {
   Tooltip,
   Legend,
 } from "recharts"
-import CombinedActivities from "../Types/CombinedActivities"
+import CombinedActivities from "../Types/CombinedActivitiesType"
 import { useActivityMeta } from "../Context/ActivityMetaContext"
 
 interface ChartComponentProps {

@@ -1,4 +1,4 @@
-import DeveloperWorklogRow from "../Types/DeveloperWorklogRow"
+import DeveloperWorklogRow from "../Types/DeveloperWorklogRowType"
 
 const getFormattedDeveloperNames = (
   developers: DeveloperWorklogRow[]
@@ -6,17 +6,21 @@ const getFormattedDeveloperNames = (
   const formattedNames: string[] = []
 
   developers.forEach((developer) => {
-    let name = developer.name.trim() // Trim leading and trailing spaces
-    if (name.startsWith("@")) {
-      name = name.substring(1) // Remove leading '@'
-    }
-    //  name = name.replace(/\./g, " ") // Replace all '.' with spaces
-    //  name = name.charAt(0).toUpperCase() + name.slice(1) // Capitalize first letter
+    let name = getFormattedDeveloperName(developer.name)
 
     formattedNames.push(name)
   })
+
   console.log(formattedNames, "formattedNames")
   return formattedNames
 }
+const getFormattedDeveloperName = (name: string): string => {
+  name = name.trim() // Trim leading and trailing spaces
+  if (name.includes("@")) {
+    name = name.split("@")[0] // Take the part before '@'
+  }
+  const firstName = name.split(".")[0] // Take only the first part before '.'
+  return firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase() // Capitalize first part
+}
 
-export default getFormattedDeveloperNames
+export { getFormattedDeveloperNames, getFormattedDeveloperName }

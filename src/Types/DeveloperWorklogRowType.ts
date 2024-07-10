@@ -1,5 +1,5 @@
-import Activity from "./Activity"
-import DayWiseActivity from "./DayWiseActivity"
+import Activity from "./ActivityType"
+import DayWiseActivity from "./DayWiseActivityType"
 
 type DeveloperWorklogRow = {
   name: string

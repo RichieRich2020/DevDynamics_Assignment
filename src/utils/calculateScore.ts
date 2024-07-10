@@ -1,4 +1,4 @@
-import DeveloperWorklogRow from "../Types/DeveloperWorklogRow"
+import DeveloperWorklogRow from "../Types/DeveloperWorklogRowType"
 import findActivityCount from "./findActivityCount"
 
 const normalize = (value: number, max: number) => {

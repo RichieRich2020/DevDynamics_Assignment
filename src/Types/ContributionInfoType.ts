@@ -1,4 +1,4 @@
-import DeveloperWorklogRow from "./DeveloperWorklogRow"
+import DeveloperWorklogRow from "./DeveloperWorklogRowType"
 
 type ContributionInfo = {
   data: {

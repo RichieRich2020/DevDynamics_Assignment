@@ -1,6 +1,6 @@
-import CombinedActivities from "../Types/CombinedActivities"
-import ContributionInfo from "../Types/ContributionInfo"
-import DeveloperWorklogRow from "../Types/DeveloperWorklogRow"
+import CombinedActivities from "../Types/CombinedActivitiesType"
+import ContributionInfo from "../Types/ContributionInfoType"
+import DeveloperWorklogRow from "../Types/DeveloperWorklogRowType"
 
 const combineDayWiseActivities = (data: ContributionInfo[]) => {
   const combinedData: CombinedActivities[] = []

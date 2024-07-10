@@ -1,4 +1,4 @@
-import ActivityDetail from "./ActivityDetail"
+import ActivityDetail from "./ActivityDetailType"
 
 type DayWiseActivity = {
   date: string

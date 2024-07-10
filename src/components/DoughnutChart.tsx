@@ -1,8 +1,8 @@
 import * as echarts from "echarts"
 import { useEffect } from "react"
 import { useActivityMeta } from "../Context/ActivityMetaContext"
-import MaxValues from "../Types/MaxValues"
-import ActivityMeta from "../Types/ActivityMeta"
+import MaxValues from "../Types/MaxValuesType"
+import ActivityMeta from "../Types/ActivityMetaType"
 
 interface DoughnutChartProps {
   totalValue: {
@@ -17,7 +17,6 @@ interface DoughnutChartProps {
 const DoughnutChart: React.FC<DoughnutChartProps> = ({ totalValue }) => {
   const activityMeta = useActivityMeta() || [] // Ensure activityMeta is defined as an empty array if undefined
 
-  // Example data for the Doughnut chart
   const generateChartData = (
     totalValue: MaxValues,
     activityMeta: ActivityMeta[]
@@ -32,14 +31,12 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ totalValue }) => {
 
   const chartData = generateChartData(totalValue, activityMeta)
 
-  // Initialize ECharts instance
   useEffect(() => {
     const chartDom = document.getElementById("main")
     if (!chartDom) return
 
     const myChart = echarts.init(chartDom)
 
-    // Chart options
     const option: echarts.EChartsOption = {
       tooltip: {
         trigger: "item",
@@ -82,14 +79,12 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ totalValue }) => {
       ],
     }
 
-    // Set chart options
     option && myChart.setOption(option)
 
-    // Clean up ECharts instance
     return () => {
       myChart.dispose()
     }
-  }, [totalValue, activityMeta]) // Re-render chart when totalValue or activityMeta changes
+  }, [totalValue, activityMeta])
 
   return <div id="main" style={{ width: "100%", height: "500px" }}></div>
 }
