@@ -1,8 +1,10 @@
 import React from "react"
 import { Table, Tag, Avatar } from "antd"
 import { UserOutlined } from "@ant-design/icons"
-import SimulateData from "../Types/SimulateDataType"
+
 import { useActivityMeta } from "../Context/ActivityMetaContext"
+
+import SimulateData from "../Types/SimulateDataType"
 
 interface DeveloperTableProps {
   data: SimulateData[]

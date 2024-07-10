@@ -1,4 +1,4 @@
-import React, { useState } from "react"
+import React, { useState, useMemo } from "react"
 import { Select, Space, Badge, List, Card, Typography, Avatar } from "antd"
 import {
   UnorderedListOutlined,
@@ -38,88 +38,111 @@ const { Option } = Select
 const { Text, Link } = Typography
 
 const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
-  const combinedActivities = combineDayWiseActivities(data)
+  const combinedActivities = useMemo(
+    () => combineDayWiseActivities(data),
+    [data]
+  )
   const [developerFilter, setDeveloperFilter] = useState("")
   const activityMetaaa = useActivityMeta()
 
-  const names = getFormattedDeveloperNames(data[0].data.AuthorWorklog.rows)
+  const names = useMemo(
+    () => getFormattedDeveloperNames(data[0].data.AuthorWorklog.rows),
+    [data]
+  )
 
   const handleFilterChange = (value: any) => {
     setDeveloperFilter(value)
   }
 
-  const filteredDevelopers = developerFilter
-    ? data[0].data.AuthorWorklog.rows.filter((developer: DeveloperWorklogRow) =>
-        developer.name.toLowerCase().includes(developerFilter.toLowerCase())
-      )
-    : data[0].data.AuthorWorklog.rows
+  const filteredDevelopers = useMemo(() => {
+    return developerFilter
+      ? data[0].data.AuthorWorklog.rows.filter(
+          (developer: DeveloperWorklogRow) =>
+            getFormattedDeveloperName(developer.name)
+              .toLowerCase()
+              .includes(developerFilter.toLowerCase())
+        )
+      : data[0].data.AuthorWorklog.rows
+  }, [developerFilter, data])
 
-  const maxValues: MaxValues = filteredDevelopers.reduce(
-    (max: MaxValues, developer: DeveloperWorklogRow) => ({
-      Commits: Math.max(max.Commits, findActivityCount(developer, "Commits")),
-      PR_Open: Math.max(max.PR_Open, findActivityCount(developer, "PR Open")),
-      PR_Merged: Math.max(
-        max.PR_Merged,
-        findActivityCount(developer, "PR Merged")
-      ),
-      PR_Reviewed: Math.max(
-        max.PR_Reviewed,
-        findActivityCount(developer, "PR Reviewed")
-      ),
-      PR_Comments: Math.max(
-        max.PR_Comments,
-        findActivityCount(developer, "PR Comments")
-      ),
-    }),
-    {
-      Commits: 0,
-      PR_Open: 0,
-      PR_Merged: 0,
-      PR_Reviewed: 0,
-      PR_Comments: 0,
-    }
-  )
+  const maxValues: MaxValues = useMemo(() => {
+    return filteredDevelopers.reduce(
+      (max: MaxValues, developer: DeveloperWorklogRow) => ({
+        Commits: Math.max(max.Commits, findActivityCount(developer, "Commits")),
+        PR_Open: Math.max(max.PR_Open, findActivityCount(developer, "PR Open")),
+        PR_Merged: Math.max(
+          max.PR_Merged,
+          findActivityCount(developer, "PR Merged")
+        ),
+        PR_Reviewed: Math.max(
+          max.PR_Reviewed,
+          findActivityCount(developer, "PR Reviewed")
+        ),
+        PR_Comments: Math.max(
+          max.PR_Comments,
+          findActivityCount(developer, "PR Comments")
+        ),
+      }),
+      {
+        Commits: 0,
+        PR_Open: 0,
+        PR_Merged: 0,
+        PR_Reviewed: 0,
+        PR_Comments: 0,
+      }
+    )
+  }, [filteredDevelopers])
 
-  const totalValues = filteredDevelopers.reduce(
-    (total: MaxValues, developer: DeveloperWorklogRow) => ({
-      Commits: total.Commits + findActivityCount(developer, "Commits"),
-      PR_Open: total.PR_Open + findActivityCount(developer, "PR Open"),
-      PR_Merged: total.PR_Merged + findActivityCount(developer, "PR Merged"),
-      PR_Reviewed:
-        total.PR_Reviewed + findActivityCount(developer, "PR Reviewed"),
-      PR_Comments:
-        total.PR_Comments + findActivityCount(developer, "PR Comments"),
-    }),
-    {
-      Commits: 0,
-      PR_Open: 0,
-      PR_Merged: 0,
-      PR_Reviewed: 0,
-      PR_Comments: 0,
-    }
-  )
+  const totalValues = useMemo(() => {
+    return filteredDevelopers.reduce(
+      (total: MaxValues, developer: DeveloperWorklogRow) => ({
+        Commits: total.Commits + findActivityCount(developer, "Commits"),
+        PR_Open: total.PR_Open + findActivityCount(developer, "PR Open"),
+        PR_Merged: total.PR_Merged + findActivityCount(developer, "PR Merged"),
+        PR_Reviewed:
+          total.PR_Reviewed + findActivityCount(developer, "PR Reviewed"),
+        PR_Comments:
+          total.PR_Comments + findActivityCount(developer, "PR Comments"),
+      }),
+      {
+        Commits: 0,
+        PR_Open: 0,
+        PR_Merged: 0,
+        PR_Reviewed: 0,
+        PR_Comments: 0,
+      }
+    )
+  }, [filteredDevelopers])
 
-  const Developerss = [...filteredDevelopers]
-    .map((developer) => ({
-      ...developer,
-      score: calculateScore(developer, maxValues),
-    }))
-    .sort((a, b) => b.score - a.score)
-  const rankedDevelopers = Developerss.slice(0, 5)
+  const Developerss = useMemo(() => {
+    return [...filteredDevelopers]
+      .map((developer) => ({
+        ...developer,
+        score: calculateScore(developer, maxValues),
+      }))
+      .sort((a, b) => b.score - a.score)
+  }, [filteredDevelopers, maxValues])
 
-  const filteredDeveloperData: CombinedActivities[] = developerFilter
-    ? combineDayWiseActivitiesForDeveloper(
-        filteredDevelopers.find((developer) => {
-          return getFormattedDeveloperName(developer.name) === developerFilter
-        }) as DeveloperWorklogRow
-      )
-    : combinedActivities
+  const rankedDevelopers = useMemo(() => Developerss.slice(0, 5), [Developerss])
 
-  console.log(developerFilter, "filteredDeveloperData")
-  const activityColors: any = {}
-  activityMetaaa?.forEach((meta) => {
-    activityColors[meta.label.replace(" ", "_")] = meta.fillColor
-  })
+  const filteredDeveloperData: CombinedActivities[] = useMemo(() => {
+    return developerFilter
+      ? combineDayWiseActivitiesForDeveloper(
+          filteredDevelopers.find((developer) => {
+            return getFormattedDeveloperName(developer.name) === developerFilter
+          }) as DeveloperWorklogRow
+        )
+      : combinedActivities
+  }, [developerFilter, filteredDevelopers, combinedActivities])
+
+  const activityColors: any = useMemo(() => {
+    const colors: any = {}
+    activityMetaaa?.forEach((meta) => {
+      colors[meta.label.replace(" ", "_")] = meta.fillColor
+    })
+    return colors
+  }, [activityMetaaa])
+
   return (
     <>
       <div

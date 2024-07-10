@@ -1,6 +1,8 @@
 import * as echarts from "echarts"
 import { useEffect } from "react"
+
 import { useActivityMeta } from "../Context/ActivityMetaContext"
+
 import MaxValues from "../Types/MaxValuesType"
 import ActivityMeta from "../Types/ActivityMetaType"
 

@@ -9,8 +9,10 @@ import {
   CartesianGrid,
   ResponsiveContainer,
 } from "recharts"
-import SimulateData from "../Types/SimulateDataType"
+
 import { useActivityMeta } from "../Context/ActivityMetaContext"
+
+import SimulateData from "../Types/SimulateDataType"
 
 interface RankingChartProps {
   data: SimulateData[]
