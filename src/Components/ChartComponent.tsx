@@ -46,7 +46,7 @@ const ChartComponent: React.FC<ChartComponentProps> = ({
           // Add any other styles as needed
         }}
       > */}
-      <div style={{ width: "100%" }}>
+      <div style={{ width: "100%", padding: "20px" }}>
         <ResponsiveContainer width="100%" height={400}>
           <LineChart data={lineChartData}>
             <XAxis dataKey="date" />

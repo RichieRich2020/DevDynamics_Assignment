@@ -187,7 +187,12 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
                   paddingRight: "10px",
                 }}
               >
-                <span>Total Values</span>
+                {developerFilter == "" ? (
+                  <span>Team Activity </span>
+                ) : (
+                  <span>Activity</span>
+                )}
+
                 <UnorderedListOutlined style={{ marginLeft: "10px" }} />
               </div>
             }
