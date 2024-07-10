@@ -176,7 +176,6 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
               Overview
             </h2>
           </div>
-
           <Card
             title={
               <div
@@ -317,9 +316,9 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
               </div>
             </div>
             {developerFilter == "" ? (
-              <h2>Top 5 Developes</h2>
+              <h2>Top 5 Developers</h2>
             ) : (
-              <h2>Performnaces</h2>
+              <h2>Performances</h2>
             )}
             <Box
               sx={{
@@ -332,9 +331,9 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
             </Box>
           </Box>
           {developerFilter == "" ? (
-            <h2>Daily Performance Metrics Of Team</h2>
+            <h2>Daily Performances Metrics Of Team</h2>
           ) : (
-            <h2>Daily Performance Metrics</h2>
+            <h2>Daily Performances Metrics</h2>
           )}
           <ChartComponent combinedActivities={filteredDeveloperData} />
         </div>
