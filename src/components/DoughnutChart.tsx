@@ -91,7 +91,7 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ totalValue }) => {
     }
   }, [totalValue, activityMeta]) // Re-render chart when totalValue or activityMeta changes
 
-  return <div id="main" style={{ width: "100%", height: "600px" }}></div>
+  return <div id="main" style={{ width: "100%", height: "500px" }}></div>
 }
 
 export default DoughnutChart

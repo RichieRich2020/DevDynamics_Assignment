@@ -14,6 +14,7 @@ import {
 } from "@ant-design/icons"
 import { Button, Layout, Menu, theme, Typography } from "antd"
 import { ActivityMetaProvider } from "./Context/ActivityMetaContext"
+import ActivityMeta from "./Types/ActivityMeta"
 
 const { Header, Sider, Content } = Layout
 const { Text } = Typography
@@ -24,7 +25,7 @@ const App: React.FC = () => {
     token: { colorBgContainer, borderRadiusLG },
   } = theme.useToken()
 
-  const ActivityMetaa = getActivityMetaFromContributionInfo(data)
+  const ActivityMeta: ActivityMeta[] = getActivityMetaFromContributionInfo(data)
   return (
     <Layout>
       <Sider
@@ -40,6 +41,7 @@ const App: React.FC = () => {
             justifyContent: "center",
             alignItems: "center",
             padding: "20px 0",
+            textAlign: "center",
           }}
         >
           <img
@@ -48,7 +50,6 @@ const App: React.FC = () => {
             style={{
               padding: "10px",
               width: "80%",
-              textAlign: "center",
             }}
           />
           <Button
@@ -68,7 +69,6 @@ const App: React.FC = () => {
           style={{
             backgroundColor: "#ffffff",
             color: "#1e201f",
-            paddingTop: "40px",
           }}
           items={[
             {
@@ -109,7 +109,7 @@ const App: React.FC = () => {
             // borderRadius: borderRadiusLG,
           }}
         >
-          <ActivityMetaProvider value={ActivityMetaa}>
+          <ActivityMetaProvider value={ActivityMeta}>
             <DeveloperActivityDashboard data={data} />
           </ActivityMetaProvider>
         </Content>

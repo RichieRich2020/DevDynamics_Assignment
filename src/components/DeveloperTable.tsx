@@ -120,7 +120,7 @@ const DeveloperTable: React.FC<DeveloperTableProps> = ({ data }) => {
     <Table
       columns={columns}
       dataSource={dataSource}
-      pagination={{ pageSize: 6 }} // Pagination configuration
+      pagination={{ pageSize: 6 }}
     />
   )
 }

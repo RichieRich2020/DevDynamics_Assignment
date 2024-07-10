@@ -1,14 +1,5 @@
 import React, { useState } from "react"
-import {
-  Select,
-  Space,
-  Badge,
-  List,
-  Card,
-  Divider,
-  Typography,
-  Avatar,
-} from "antd"
+import { Select, Space, Badge, List, Card, Typography, Avatar } from "antd"
 import {
   UnorderedListOutlined,
   UserOutlined,
@@ -16,156 +7,35 @@ import {
   BellOutlined,
 } from "@ant-design/icons"
 import { Box } from "@mui/material"
+
 import RankingChart from "./RankingChart"
 import DoughnutChart from "./DoughnutChart"
 import ChartComponent from "./ChartComponent"
+
+import getFormattedDeveloperNames from "../utils/getFormattedDeveloperNames"
+import { useActivityMeta } from "../Context/ActivityMetaContext"
+import DeveloperTable from "./DeveloperTable"
 import CombinedActivities from "../Types/CombinedActivities"
 import DeveloperWorklogRow from "../Types/DeveloperWorklogRow"
 import ContributionInfo from "../Types/ContributionInfo"
 import MaxValues from "../Types/MaxValues"
-import getFormattedDeveloperNames from "../utils/getFormattedDeveloperNames"
-import { useActivityMeta } from "../Context/ActivityMetaContext"
-import DeveloperTable from "./DeveloperTable"
-const { Option } = Select
+import combineDayWiseActivities from "../utils/combineDayWiseActivities"
+import combineDayWiseActivitiesForDeveloper from "../utils/combineDayWiseActivitiesForDeveloper"
+import calculateScore from "../utils/calculateScore"
+import findActivityCount from "../utils/findActivityCount"
 
-const weights = {
-  Commits: 25,
-  PR_Open: 15,
-  PR_Merged: 25,
-  PR_Reviewed: 2,
-  PR_Comments: 15,
-}
-const { Text, Link } = Typography
-const normalize = (value: number, max: number) => {
-  if (max === 0) {
-    return 0
-  }
-  return (value / max) * 100
-}
-
-const calculateScore = (developer: DeveloperWorklogRow, maxValues: any) => {
-  let score = 0
-
-  score +=
-    normalize(
-      Number(findActivityCount(developer, "Commits")),
-      maxValues.Commits
-    ) * weights.Commits
-  score +=
-    normalize(
-      Number(findActivityCount(developer, "PR Open")),
-      maxValues.PR_Open
-    ) * weights.PR_Open
-  score +=
-    normalize(
-      Number(findActivityCount(developer, "PR Merged")),
-      maxValues.PR_Merged
-    ) * weights.PR_Merged
-  score +=
-    normalize(
-      Number(findActivityCount(developer, "PR Reviewed")),
-      maxValues.PR_Reviewed
-    ) * weights.PR_Reviewed
-  score +=
-    normalize(
-      Number(findActivityCount(developer, "PR Comments")),
-      maxValues.PR_Comments
-    ) * weights.PR_Comments
-
-  return score
-}
-
-function findActivityCount(
-  developer: DeveloperWorklogRow,
-  activityLabel: string
-) {
-  const activity = developer.totalActivity.find(
-    (activity) => activity.name === activityLabel
-  )
-  return activity ? Number(activity.value) : 0
-}
-const combineDayWiseActivities = (data: ContributionInfo[]) => {
-  const combinedData: CombinedActivities[] = []
-
-  data.forEach((contribution) => {
-    contribution.data.AuthorWorklog.rows.forEach((row) => {
-      row.dayWiseActivity.forEach((day) => {
-        const existingEntry = combinedData.find(
-          (entry) => entry.date === day.date
-        )
-
-        if (existingEntry) {
-          day.data.children.forEach((child) => {
-            if (existingEntry.combinedData[child.label]) {
-              existingEntry.combinedData[child.label] += parseInt(
-                child.count,
-                10
-              )
-            } else {
-              existingEntry.combinedData[child.label] = parseInt(
-                child.count,
-                10
-              )
-            }
-          })
-        } else {
-          const newDataEntry: CombinedActivities = {
-            date: day.date,
-            combinedData: {},
-          }
-
-          day.data.children.forEach((child: any) => {
-            newDataEntry.combinedData[child.label] = parseInt(child.count, 10)
-          })
-
-          combinedData.push(newDataEntry)
-        }
-      })
-    })
-  })
-
-  return combinedData
-}
-
-const combineDayWiseActivitiesForDeveloper = (
-  developer: DeveloperWorklogRow
-) => {
-  const combinedData: CombinedActivities[] = []
-  console.log(developer, "deveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
-  developer.dayWiseActivity.forEach((day) => {
-    const existingEntry = combinedData.find((entry) => entry.date === day.date)
-
-    if (existingEntry) {
-      day.data.children.forEach((child) => {
-        if (existingEntry.combinedData[child.label]) {
-          existingEntry.combinedData[child.label] += parseInt(child.count, 10)
-        } else {
-          existingEntry.combinedData[child.label] = parseInt(child.count, 10)
-        }
-      })
-    } else {
-      const newDataEntry: CombinedActivities = {
-        date: day.date,
-        combinedData: {},
-      }
-
-      day.data.children.forEach((child) => {
-        newDataEntry.combinedData[child.label] = parseInt(child.count, 10)
-      })
-
-      combinedData.push(newDataEntry)
-    }
-  })
-  console.log(combinedData)
-
-  return combinedData
-}
 interface DashboardProps {
   data: ContributionInfo[]
 }
+
+const { Option } = Select
+
+const { Text, Link } = Typography
+
 const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
   const combinedActivities = combineDayWiseActivities(data)
   const [developerFilter, setDeveloperFilter] = useState("")
+  const activityMetaaa = useActivityMeta()
 
   const names = getFormattedDeveloperNames(data[0].data.AuthorWorklog.rows)
 
@@ -232,11 +102,6 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
     .sort((a, b) => b.score - a.score)
   const rankedDevelopers = Developerss.slice(0, 5)
 
-  console.log(
-    filteredDevelopers.find((developer) => developer.name === developerFilter),
-    "rankedDevelopers"
-  )
-
   const filteredDeveloperData: CombinedActivities[] = developerFilter
     ? combineDayWiseActivitiesForDeveloper(
         filteredDevelopers.find(
@@ -244,29 +109,23 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
         ) as DeveloperWorklogRow
       )
     : combinedActivities
-  const activityMetaaa = useActivityMeta()
-  console.log(activityMetaaa, "activityMetaaa")
-  const activityColors = {
-    Commits: "#FAC76E",
-    PR_Open: "#EF6B6B",
-    PR_Merged: "#61CDBB",
-    PR_Reviewed: "#C2528B",
-    PR_Comments: "#0396A6",
-  }
+
+  const activityColors: any = {}
+  activityMetaaa?.forEach((meta) => {
+    activityColors[meta.label.replace(" ", "_")] = meta.fillColor
+  })
   return (
     <>
       <div
         style={{
           display: "flex",
           width: "100%",
-          // height: "1000px",
-          marginBottom: "230px",
+          marginBottom: "20px",
         }}
       >
         <div
           style={{
             width: "40%",
-            height: "300px",
             backgroundColor: "#f1f1f1",
             textAlign: "center",
           }}
@@ -340,10 +199,7 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
                 </List.Item>
               )}
             />
-
-            {/* <Divider /> */}
           </Card>
-
           <Card
             title={
               <div
@@ -364,7 +220,6 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
               maxWidth: "800px",
               margin: "auto",
               backgroundColor: "#f1f1f1",
-              // marginTop: "24px", // Adjust margin top as needed
             }}
           >
             <List.Item>
@@ -374,16 +229,13 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
         </div>
         <div
           style={{
-            // border: "2px solid black",
             width: "60%",
             textAlign: "center",
           }}
         >
-          {/* <h2>Developer Activity Dashboard</h2> */}
           <Box>
             <div
               style={{
-                // border: "2px solid black",
                 display: "flex",
                 justifyContent: "space-between",
                 alignItems: "center",
@@ -426,12 +278,26 @@ const DeveloperActivityDashboard: React.FC<DashboardProps> = ({ data }) => {
                 </Space>
               </div>
             </div>
-            <h2>Top 5 Developer</h2>
-            <Box sx={{ display: "flex", justifyContent: "center" }}>
+            {developerFilter == "" ? (
+              <h2>Top 5 Developes</h2>
+            ) : (
+              <h2>Performnaces</h2>
+            )}
+            <Box
+              sx={{
+                display: "flex",
+                justifyContent: "center",
+                marginBottom: "100px",
+              }}
+            >
               <RankingChart data={rankedDevelopers} />
             </Box>
           </Box>
-          <h2>Daily Performance Metrics</h2>
+          {developerFilter == "" ? (
+            <h2>Daily Performance Metrics Of Team</h2>
+          ) : (
+            <h2>Daily Performance Metrics</h2>
+          )}
           <ChartComponent combinedActivities={filteredDeveloperData} />
         </div>
       </div>
