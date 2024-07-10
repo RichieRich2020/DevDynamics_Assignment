@@ -5,6 +5,7 @@ import { UserOutlined } from "@ant-design/icons"
 import { useActivityMeta } from "../Context/ActivityMetaContext"
 
 import SimulateData from "../Types/SimulateDataType"
+import { getFormattedDeveloperName } from "../utils/getFormattedDeveloperNames"
 
 interface DeveloperTableProps {
   data: SimulateData[]
@@ -87,7 +88,7 @@ const DeveloperTable: React.FC<DeveloperTableProps> = ({ data }) => {
     avatar: (
       <Avatar style={{ backgroundColor: "#87d068" }} icon={<UserOutlined />} />
     ),
-    name: developer.name,
+    name: getFormattedDeveloperName(developer.name),
     score: Math.floor(developer.score / 100),
     PR_Open: parseInt(
       developer.totalActivity.find((item) => item.name === "PR Open")?.value ||
