@@ -1,4 +1,5 @@
 import DeveloperWorklogRow from "../Types/DeveloperWorklogRowType"
+import Parameters from "../Types/ParametersType"
 import findActivityCount from "./findActivityCount"
 
 const normalize = (value: number, max: number) => {
@@ -8,7 +9,7 @@ const normalize = (value: number, max: number) => {
   return (value / max) * 100
 }
 
-const weights = {
+const weights: any = {
   Commits: 25,
   PR_Open: 15,
   PR_Merged: 25,
@@ -16,36 +17,23 @@ const weights = {
   PR_Comments: 15,
 }
 
-const calculateScore = (developer: DeveloperWorklogRow, maxValues: any) => {
+const calculateScore = (
+  developer: DeveloperWorklogRow,
+  maxValues: Parameters
+): number => {
   let score = 0
 
-  score +=
-    normalize(
-      Number(findActivityCount(developer, "Commits")),
-      maxValues.Commits
-    ) * weights.Commits
-  score +=
-    normalize(
-      Number(findActivityCount(developer, "PR Open")),
-      maxValues.PR_Open
-    ) * weights.PR_Open
-  score +=
-    normalize(
-      Number(findActivityCount(developer, "PR Merged")),
-      maxValues.PR_Merged
-    ) * weights.PR_Merged
-  score +=
-    normalize(
-      Number(findActivityCount(developer, "PR Reviewed")),
-      maxValues.PR_Reviewed
-    ) * weights.PR_Reviewed
-  score +=
-    normalize(
-      Number(findActivityCount(developer, "PR Comments")),
-      maxValues.PR_Comments
-    ) * weights.PR_Comments
+  Object.keys(maxValues).forEach((activityName) => {
+    const normalizedCount = normalize(
+      Number(findActivityCount(developer, activityName.replace("_", " "))),
+      maxValues[activityName as keyof Parameters]
+    )
+    const weight = weights[activityName]
+    if (weight !== undefined) {
+      score += normalizedCount * weight
+    }
+  })
 
   return score
 }
-
 export default calculateScore

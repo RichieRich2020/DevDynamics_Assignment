@@ -4,15 +4,21 @@ import { UserOutlined } from "@ant-design/icons"
 
 import { useActivityMeta } from "../Context/ActivityMetaContext"
 
-import SimulateData from "../Types/SimulateDataType"
 import { getFormattedDeveloperName } from "../utils/getFormattedDeveloperNames"
+import DeveloperWorklogRow from "../Types/DeveloperWorklogRowType"
+import ActivityMeta from "../Types/ActivityMetaType"
 
 interface DeveloperTableProps {
-  data: SimulateData[]
+  data: DeveloperWorklogRow[]
 }
 
 const DeveloperTable: React.FC<DeveloperTableProps> = ({ data }) => {
-  const activityMeta = useActivityMeta() // Assuming this provides color information
+  const activityMeta: ActivityMeta[] = useActivityMeta() || [] // Provide a default empty array
+
+  const getActivityColor = (activityName: string) => {
+    const activity = activityMeta.find((meta) => meta.label === activityName)
+    return activity ? activity.fillColor : "#CCCCCC"
+  }
 
   const columns = [
     {
@@ -35,87 +41,33 @@ const DeveloperTable: React.FC<DeveloperTableProps> = ({ data }) => {
       key: "score",
       render: (score: number) => <span>{score.toFixed(2)}</span>, // Render score with 2 decimal places
     },
-    {
-      title: "PR Open",
-      dataIndex: "PR_Open",
-      key: "PR_Open",
-      render: (PR_Open: number) => (
-        <Tag color={getActivityColor("PR Open")}>{PR_Open}</Tag>
+    ...activityMeta.map((activity) => ({
+      title: activity.label,
+      dataIndex: activity.label,
+      key: activity.label,
+      render: (value: number) => (
+        <Tag color={getActivityColor(activity.label)}>{value}</Tag>
       ),
-    },
-    {
-      title: "PR Merged",
-      dataIndex: "PR_Merged",
-      key: "PR_Merged",
-      render: (PR_Merged: number) => (
-        <Tag color={getActivityColor("PR Merged")}>{PR_Merged}</Tag>
-      ),
-    },
-    {
-      title: "Commits",
-      dataIndex: "Commits",
-      key: "Commits",
-      render: (Commits: number) => (
-        <Tag color={getActivityColor("Commits")}>{Commits}</Tag>
-      ),
-    },
-    {
-      title: "PR Reviewed",
-      dataIndex: "PR_Reviewed",
-      key: "PR_Reviewed",
-      render: (PR_Reviewed: number) => (
-        <Tag color={getActivityColor("PR Reviewed")}>{PR_Reviewed}</Tag>
-      ),
-    },
-    {
-      title: "PR Comments",
-      dataIndex: "PR_Comments",
-      key: "PR_Comments",
-      render: (PR_Comments: number) => (
-        <Tag color={getActivityColor("PR Comments")}>{PR_Comments}</Tag>
-      ),
-    },
+    })),
   ]
 
-  const getActivityColor = (activityName: string) => {
-    const activity =
-      activityMeta && activityMeta.find((meta) => meta.label === activityName)
-    return activity ? activity.fillColor : "#CCCCCC"
-  }
+  const dataSource = data.map((developer, index) => {
+    const activityData = activityMeta.reduce((acc, activity) => {
+      acc[activity.label] = parseInt(
+        developer.totalActivity.find((item) => item.name === activity.label)
+          ?.value || "0",
+        10
+      )
+      return acc
+    }, {} as { [key: string]: number })
 
-  const dataSource = data.map((developer, index) => ({
-    key: index,
-    avatar: (
-      <Avatar style={{ backgroundColor: "#87d068" }} icon={<UserOutlined />} />
-    ),
-    name: getFormattedDeveloperName(developer.name),
-    score: Math.floor(developer.score / 100),
-    PR_Open: parseInt(
-      developer.totalActivity.find((item) => item.name === "PR Open")?.value ||
-        "0",
-      10
-    ),
-    PR_Merged: parseInt(
-      developer.totalActivity.find((item) => item.name === "PR Merged")
-        ?.value || "0",
-      10
-    ),
-    Commits: parseInt(
-      developer.totalActivity.find((item) => item.name === "Commits")?.value ||
-        "0",
-      10
-    ),
-    PR_Reviewed: parseInt(
-      developer.totalActivity.find((item) => item.name === "PR Reviewed")
-        ?.value || "0",
-      10
-    ),
-    PR_Comments: parseInt(
-      developer.totalActivity.find((item) => item.name === "PR Comments")
-        ?.value || "0",
-      10
-    ),
-  }))
+    return {
+      key: index,
+      name: getFormattedDeveloperName(developer.name),
+      score: Math.floor((developer.score || 0) / 100),
+      ...activityData,
+    }
+  })
 
   return (
     <Table

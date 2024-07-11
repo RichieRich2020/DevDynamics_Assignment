@@ -6,7 +6,7 @@ function getActivityMetaFromContributionInfo(
   data: ContributionInfo[]
 ): ActivityMeta[] {
   const processedData: ActivityMeta[] = []
-  const labelSet = new Set<string>() // Set to keep track of unique labels
+  const labelSet = new Set<string>()
 
   data.forEach((contribution) => {
     const { dayWiseActivity } = contribution.data.AuthorWorklog.rows[0]
@@ -16,12 +16,11 @@ function getActivityMetaFromContributionInfo(
 
       children.forEach((child) => {
         if (!labelSet.has(child.label)) {
-          // Check if label is not already in the Set
           processedData.push({
             label: child.label,
             fillColor: child.fillColor,
           })
-          labelSet.add(child.label) // Add label to Set to prevent duplicates
+          labelSet.add(child.label)
         }
       })
     })

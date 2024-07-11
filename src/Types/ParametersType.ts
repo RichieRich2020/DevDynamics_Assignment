@@ -1,4 +1,4 @@
-interface MaxValues {
+interface Parameters {
   Commits: number
   PR_Open: number
   PR_Merged: number
@@ -6,4 +6,4 @@ interface MaxValues {
   PR_Comments: number
 }
 
-export default MaxValues
+export default Parameters

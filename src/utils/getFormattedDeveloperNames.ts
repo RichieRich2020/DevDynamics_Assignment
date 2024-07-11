@@ -15,12 +15,12 @@ const getFormattedDeveloperNames = (
   return formattedNames
 }
 const getFormattedDeveloperName = (name: string): string => {
-  name = name.trim() // Trim leading and trailing spaces
+  name = name.trim()
   if (name.includes("@")) {
-    name = name.split("@")[0] // Take the part before '@'
+    name = name.split("@")[0]
   }
-  const firstName = name.split(".")[0] // Take only the first part before '.'
-  return firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase() // Capitalize first part
+  const firstName = name.split(".")[0]
+  return firstName.charAt(0).toUpperCase() + firstName.slice(1).toLowerCase()
 }
 
 export { getFormattedDeveloperNames, getFormattedDeveloperName }

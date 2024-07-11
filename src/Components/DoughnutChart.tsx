@@ -3,8 +3,8 @@ import { useEffect } from "react"
 
 import { useActivityMeta } from "../Context/ActivityMetaContext"
 
-import MaxValues from "../Types/MaxValuesType"
 import ActivityMeta from "../Types/ActivityMetaType"
+import Parameters from "../Types/ParametersType"
 
 interface DoughnutChartProps {
   totalValue: {
@@ -20,11 +20,11 @@ const DoughnutChart: React.FC<DoughnutChartProps> = ({ totalValue }) => {
   const activityMeta = useActivityMeta() || [] // Ensure activityMeta is defined as an empty array if undefined
 
   const generateChartData = (
-    totalValue: MaxValues,
+    totalValue: Parameters,
     activityMeta: ActivityMeta[]
   ) => {
     const data = activityMeta.map((meta) => ({
-      value: totalValue[meta.label.replace(/ /g, "_") as keyof MaxValues] || 0,
+      value: totalValue[meta.label.replace(/ /g, "_") as keyof Parameters] || 0,
       name: meta.label,
     }))
 
