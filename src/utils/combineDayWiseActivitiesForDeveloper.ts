@@ -5,7 +5,7 @@ const combineDayWiseActivitiesForDeveloper = (
   developer: DeveloperWorklogRow
 ) => {
   const combinedData: CombinedActivities[] = []
-  console.log(developer, "deveeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeeee")
+
   developer.dayWiseActivity.forEach((day) => {
     const existingEntry = combinedData.find((entry) => entry.date === day.date)
 

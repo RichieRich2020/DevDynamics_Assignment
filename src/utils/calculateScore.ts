@@ -10,9 +10,9 @@ const normalize = (value: number, max: number) => {
 }
 
 const weights: any = {
-  Commits: 25,
+  Commits: 20,
   PR_Open: 15,
-  PR_Merged: 25,
+  PR_Merged: 30,
   PR_Reviewed: 2,
   PR_Comments: 15,
 }
